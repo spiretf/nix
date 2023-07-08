@@ -1,15 +1,15 @@
-{ stdenv, multiStdenv, fetchFromGitHub, ambuild, metamod-source, symlinkJoin, sdks ? {} }: let
+{ clangMultiStdenv, fetchFromGitHub, ambuild, metamod-source, symlinkJoin, sdks ? {} }: let
   inherit (builtins) concatStringsSep attrNames attrValues;
   sdkNames = attrNames sdks;
   combinedSdks = symlinkJoin {
     name = "hl2sdk-${concatStringsSep "-" (attrNames sdks)}";
     paths = attrValues sdks;
   };
-in multiStdenv.mkDerivation rec {
+in clangMultiStdenv.mkDerivation rec {
   pname = "sourcemod";
   version = "1.10";
 
-  NIX_CFLAGS_COMPILE = "-Wno-error=class-memaccess -Wno-error=format-truncation -Wno-error=misleading-indentation";
+  NIX_CFLAGS_COMPILE = "-Wno-error=implicit-const-int-float-conversion -Wno-error=tautological-overlap-compare";
 
   src = fetchFromGitHub {
     owner = "alliedmodders";
