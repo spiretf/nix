@@ -1,4 +1,4 @@
-{fetchFromGitHub}: let
+{fetchFromGitHub, mkDerivation}: let
   inherit (builtins) mapAttrs;
   revisions = {
     csgo = {rev = "4e0975afe5b2994c76ec9b40951b6347b8788463"; sha256 = "sha256-Z5LD3I4uPKGIXTeSC3yQcJl6455XFwQVuiitND8ULEQ=";};
@@ -32,4 +32,13 @@
     owner = "alliedmodders";
     repo = "hl2sdk";
   };
-in mapAttrs (key: sdk: fetchRev sdk) revisions
+  buildSdk = sdkName: sdk: mkDerivation rec {
+    name = "hl2sdk-${sdkName}";
+    src = fetchRev sdk;
+    installPhase = ''
+      mkdir -p $out
+      cp -r $src $out/${name}
+    '';
+  };
+  sdks = mapAttrs buildSdk revisions;
+in sdks

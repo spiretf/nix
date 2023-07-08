@@ -1,5 +1,8 @@
 final: prev: {
-  hl2sdk = (import ./hl2sdk.nix) {inherit (final) fetchFromGitHub;};
+  hl2sdk = (import ./hl2sdk.nix) {
+    inherit (final) fetchFromGitHub;
+    inherit (final.stdenvNoCC) mkDerivation;
+  };
   ambuild = final.python3Packages.callPackage ./ambuild.nix {};
   metamod-source = final.callPackage ./metamod-source.nix {};
   sourcemod = final.callPackage ./sourcemod.nix {};

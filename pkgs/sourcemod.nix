@@ -1,8 +1,10 @@
-{ multiStdenv, fetchFromGitHub, ambuild, metamod-source, git, sdks ? {} }: let
-  inherit (builtins) attrNames concatStringsSep;
+{ stdenv, multiStdenv, fetchFromGitHub, ambuild, metamod-source, symlinkJoin, sdks ? {} }: let
+  inherit (builtins) concatStringsSep attrNames attrValues;
   sdkNames = attrNames sdks;
-  links = map (sdk: "ln -s ${sdks.${sdk}} hl2sdk-${sdk}") sdkNames;
-  metamod-sdks = metamod-source.override {inherit sdks;};
+  combinedSdks = symlinkJoin {
+    name = "hl2sdk-${concatStringsSep "-" (attrNames sdks)}";
+    paths = attrValues sdks;
+  };
 in multiStdenv.mkDerivation rec {
   pname = "sourcemod";
   version = "1.10";
@@ -17,19 +19,16 @@ in multiStdenv.mkDerivation rec {
     fetchSubmodules = true;
   };
 
-  buildInputs = [
+  nativeBuildInputs = [
     ambuild
-    git
   ];
 
   hardeningDisable = [ "all" ];
 
   configurePhase = ''
-    ${concatStringsSep "\n" links}
-    ln -s ${metamod-sdks.src} metamod-source
     mkdir build
     cd build
-    python ../configure.py --sdks present --no-mysql --disable-auto-versioning
+    python ../configure.py --sdks present --no-mysql --disable-auto-versioning --mms-path=${metamod-source.src} --hl2sdk-root=${combinedSdks}
   '';
 
   buildPhase = ''
