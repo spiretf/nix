@@ -7,7 +7,7 @@ stdenv.mkDerivation rec {
     owner = "alliedmodders";
     repo = "sourcemod";
     rev = "39c2dc60e0c0d963cfbe39bee3a7cf953cc8055c";
-    sha256 = "sha256-SwrBuOAebmLq5bgjw5i8CFuEDTtvDqLYY/dk4holrzw=";
+    sha256 = "sha256-9maE7NKSpkMfK4NgO0NAItpj2ONhGhsOOp81rTpKyFE=";
   };
 
   doConfigure = false;
