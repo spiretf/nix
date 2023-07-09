@@ -1,7 +1,6 @@
 {
   lib,
   stdenv,
-  sourcemod-includes,
   sourcepawn,
   which,
 }: {
@@ -13,7 +12,7 @@
 } @ args: let
   inherit (lib) optionals;
   inherit (builtins) removeAttrs;
-  allIncludes = includes ++ optionals defaultIncludes [sourcemod-includes];
+  allIncludes = includes ++ optionals defaultIncludes [sourcepawn.includes.sourcemod];
   forwardAttrs = removeAttrs args ["defaultIncludes" "includes" "entrypoint"];
   spEnv = sourcepawn.buildEnv allIncludes;
   outPathRelative =

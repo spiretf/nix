@@ -40,5 +40,11 @@ buildSourcePawnScript {
 };
 ```
 
-By default the sourcemod includes are available.
-Additional includes can be added by setting the `includes` argument to an array of packages containing an `include` folder containing the `.inc` files. 
+By default, the sourcemod includes are available.
+
+Additional includes can be added by setting the `includes` argument to an array of packages containing an `include` folder containing the `.inc` files.
+A helper is provided to create include packages:
+
+```nix
+sourcepawn.buildInclude [./cURL.inc ./cURL_header.inc]
+```

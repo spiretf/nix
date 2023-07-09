@@ -5,8 +5,11 @@
   python3Packages,
   buildEnv,
   writeShellScriptBin,
-  symlinkJoin
+  symlinkJoin,
+  sourcemod-includes,
+  runCommand,
 }: let
+  inherit (builtins) concatStringsSep substring stringLength;
   self = stdenv.mkDerivation rec {
     pname = "sourcepawn";
     version = "1.11";
@@ -41,7 +44,17 @@
       cp spcomp/*/spcomp spshell/*/spshell verifier/*/verifier $out/bin
     '';
 
-    passthru.buildEnv = imports: let
+    passthru = {
+      buildInclude = let
+        fileNameForStorePath = path: substring 44 (stringLength path -44) path;
+      in files: runCommand "sourcepawn-include" {} ''
+        mkdir -p $out/include
+        ${concatStringsSep "\n" (map (file: "cp ${file} $out/include/${fileNameForStorePath file}") files)}
+      '';
+      includes = {
+        sourcemod = sourcemod-includes;
+      };
+      buildEnv = imports: let
         unwrapped = symlinkJoin {
           name = "sourcepawn-env-unwrapped";
           paths = imports ++ [self];
@@ -50,11 +63,12 @@
           '';
         };
         wrapped = writeShellScriptBin "spcomp" "exec -a $0 ${unwrapped}/bin/spcomp.unwrapped $@";
-      in symlinkJoin {
-        name = "sourcepawn-env";
-        paths = [unwrapped wrapped];
-      };
+      in
+        symlinkJoin {
+          name = "sourcepawn-env";
+          paths = [unwrapped wrapped];
+        };
+    };
   };
-
 in
   self
