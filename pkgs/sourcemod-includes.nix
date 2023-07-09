@@ -1,4 +1,7 @@
-{ stdenv, fetchFromGitHub }:
+{
+  stdenv,
+  fetchFromGitHub,
+}:
 stdenv.mkDerivation rec {
   pname = "sourcemod-includes";
   version = "1.11";
