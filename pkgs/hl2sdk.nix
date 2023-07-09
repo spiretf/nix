@@ -8,7 +8,7 @@
     portal2 = {rev = "4555a278a5f3a6cf956a0b78f9c481b40664aa4f"; sha256 = "sha256-Zx5d1qhzoqTybFQQWdJw9/QqbnHUcOB3IyRVbZ/5YyA=";};
     gmod = {rev = "c12fac7c95d9ef5eca89627f944f397af16ae9b4"; sha256 = "sha256-zO1MJIY0ZgHOt9NKtWBi494bOQixk9wo5ybiQI7Esc8=";};
     nucleardawn = {rev = "568c25dcc3ded2123f851d77f27bf2a3c15382b7"; sha256 = "sha256-81O9XVd39Zq15uiTI4vNVtwTtx/qyyR+xZKNjkEze70=";};
-    orangebox = {rev = "968ec84e340343f42e3d0552dbd74500ef3034d1"; sha256 = "sha256-XZYJvsIeH+Wh5xzTFHm9fB6JPJh1CELIq/F8ERivZcc=";};
+    ep2 = {rev = "968ec84e340343f42e3d0552dbd74500ef3034d1"; sha256 = "sha256-XZYJvsIeH+Wh5xzTFHm9fB6JPJh1CELIq/F8ERivZcc="; dirName = "orangebox";};
     bgt = {rev = "a9a75c4d74e87d53b190680e4d71e93f59b3539e"; sha256 = "sha256-e7XgRvfWod6gEElNvqLC09HiUy3affoed3eqFOizk/I=";};
     darkm = {rev = "e659cbdd058fe197a2a5ead4038a591c75063331"; sha256 = "sha256-4RMOMUHLjStsqTMHToxMnxzV2TrP/buiFP3pECYf5IE=";};
     eye = {rev = "f152e66ac838fb5b8eca1a9076eb26122ac3cb51"; sha256 = "sha256-Zy/rKDKPx3pv9uZD9XhrGBoOiY8/zCBXnc9+LPEwWoQ=";};
@@ -28,12 +28,12 @@
     css = {rev = "ef291082a9efa01225001626e2b14bee8c2c63be"; sha256 = "sha256-x4tZ+fUTb+i2HoKIXgkpXjOUQIWurmHTLyJVuOm/lD0=";};
     doi = {rev = "a4a0aa9de0a648d7f91fbb9ad8aecb119bd44314"; sha256 = "sha256-qMVHEeJqHyg9Kq1Y2+MNTjChiIUyO6PkbWmKPoGZa/Q=";};
   };
-  # from https://github.com/alliedmodders/metamod-source/blob/master/sample_mm/AMBuildScript
-  linuxX86Sdks = ["episode1" "css" "hl2dm" "dods" "sdk2013" "tf2" "l4d" "l4d2" "nucleardawn" "csgo" "doi" "bms"];
-  linuxX64Sdks = ["dota" "csgo"];
+  # from https://github.com/alliedmodders/sourcemod/blob/5addaffa5665f353c874f45505914ab692535c24/AMBuildScript#L51
+  linuxX86Sdks = ["episode1" "ep2" "css" "hl2dm" "dods" "sdk2013" "tf2" "l4d" "l4d2" "nucleardawn" "csgo" "insurgency" "bms" "doi"];
+  linuxX64Sdks = ["blade" "csgo"];
   isX86 = name: elem name linuxX86Sdks;
   isX64 = name: elem name linuxX64Sdks;
-  fetchRev = {rev, sha256}: fetchFromGitHub {
+  fetchRev = {rev, sha256, ...}: fetchFromGitHub {
     inherit rev sha256;
     owner = "alliedmodders";
     repo = "hl2sdk";
@@ -43,16 +43,12 @@
     src = fetchRev sdk;
     installPhase = ''
       mkdir -p $out
-      cp -r $src $out/${name}
+      cp -r $src $out/hl2sdk-${sdk.dirName or sdkName}
     '';
-    passthru.platforms = {
-      x86 = isX86 sdkName;
-      x64 = isX64 sdkName;
-    };
 
     meta = {
-      platforms = optionals passthru.platforms.x86 ["i686-linux"] ++
-        optionals passthru.platforms.x64 ["x86_64-linux"];
+      platforms = optionals (isX86 sdkName) ["i686-linux"] ++
+        optionals (isX64 sdkName) ["x86_64-linux"];
     };
   };
   sdks = mapAttrs buildSdk revisions;

@@ -25,11 +25,11 @@ pkgs.sourcemod.override {sdks = {inherit (pkgs.hl2sdk) tf2;};};
 
 #### i686-linux
 
-`episode1`, `css`, `hl2dm`, `dods`, `sdk2013`, `tf2`, `l4d`, `l4d2`, `nucleardawn`, `csgo`, `doi` and `bms`
+`episode1`, `ep2`, `css`, `hl2dm`, `dods`, `sdk2013`, `tf2`, `l4d`, `l4d2`, `nucleardawn`, `csgo`, `insurgency`, `bms` and `doi`
 
 #### x86_64-linux
 
-`dota` and `csgo`
+`csgo` and `blade`
 
 ## Building sourcepawn script
 
