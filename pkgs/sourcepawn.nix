@@ -4,6 +4,8 @@
   ambuild,
   python3Packages,
   buildEnv,
+  writeShellScriptBin,
+  symlinkJoin
 }: let
   self = stdenv.mkDerivation rec {
     pname = "sourcepawn";
@@ -39,11 +41,20 @@
       cp spcomp/*/spcomp spshell/*/spshell verifier/*/verifier $out/bin
     '';
 
-    passthru.buildEnv = imports:
-      buildEnv {
+    passthru.buildEnv = imports: let
+        unwrapped = symlinkJoin {
+          name = "sourcepawn-env-unwrapped";
+          paths = imports ++ [self];
+          postBuild = ''
+            mv $out/bin/spcomp{,.unwrapped}
+          '';
+        };
+        wrapped = writeShellScriptBin "spcomp" "exec -a $0 ${unwrapped}/bin/spcomp.unwrapped $@";
+      in symlinkJoin {
         name = "sourcepawn-env";
-        paths = imports ++ [self];
+        paths = [unwrapped wrapped];
       };
   };
+
 in
   self
