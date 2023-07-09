@@ -12,7 +12,7 @@ The following is currently packaged:
 - `sourcemod`
 
 
-### Sourcemod SDKs
+## Sourcemod SDKs
 
 For the `sourcemod` package, you need to enable one or more SDKs at build time.
 The SDKs are packaged under the `hl2sdk` package and can be enabled like in the following example.
@@ -20,6 +20,16 @@ The SDKs are packaged under the `hl2sdk` package and can be enabled like in the 
 ```nix
 pkgs.sourcemod.override {sdks = {inherit (pkgs.hl2sdk) tf2;};};
 ```
+
+### Supported SDKs
+
+#### i686-linux
+
+`episode1`, `css`, `hl2dm`, `dods`, `sdk2013`, `tf2`, `l4d`, `l4d2`, `nucleardawn`, `csgo`, `doi` and `bms`
+
+#### x86_64-linux
+
+`dota`
 
 ## Building sourcepawn script
 

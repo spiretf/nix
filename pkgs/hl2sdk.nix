@@ -1,5 +1,6 @@
-{fetchFromGitHub, mkDerivation}: let
-  inherit (builtins) mapAttrs;
+{fetchFromGitHub, mkDerivation, lib}: let
+  inherit (builtins) mapAttrs elem;
+  inherit (lib) optionals;
   revisions = {
     csgo = {rev = "4e0975afe5b2994c76ec9b40951b6347b8788463"; sha256 = "sha256-Z5LD3I4uPKGIXTeSC3yQcJl6455XFwQVuiitND8ULEQ=";};
     tf2 = {rev = "2d3560994fbc31aebbe3a250048bbbc7f76d2803"; sha256 = "sha256-hKwF1cqg08NRPoZk77+lpC2cPMZeKVhsYFpGNi5IH30=";};
@@ -27,6 +28,11 @@
     css = {rev = "ef291082a9efa01225001626e2b14bee8c2c63be"; sha256 = "sha256-x4tZ+fUTb+i2HoKIXgkpXjOUQIWurmHTLyJVuOm/lD0=";};
     doi = {rev = "a4a0aa9de0a648d7f91fbb9ad8aecb119bd44314"; sha256 = "sha256-qMVHEeJqHyg9Kq1Y2+MNTjChiIUyO6PkbWmKPoGZa/Q=";};
   };
+  # from https://github.com/alliedmodders/metamod-source/blob/master/sample_mm/AMBuildScript
+  linuxX86Sdks = ["episode1" "css" "hl2dm" "dods" "sdk2013" "tf2" "l4d" "l4d2" "nucleardawn" "csgo" "doi" "bms"];
+  linuxX64Sdks = ["dota"];
+  isX86 = name: elem name linuxX86Sdks;
+  isX64 = name: elem name linuxX64Sdks;
   fetchRev = {rev, sha256}: fetchFromGitHub {
     inherit rev sha256;
     owner = "alliedmodders";
@@ -39,6 +45,15 @@
       mkdir -p $out
       cp -r $src $out/${name}
     '';
+    passthru.platforms = {
+      x86 = isX86 sdkName;
+      x64 = isX64 sdkName;
+    };
+
+    meta = {
+      platforms = optionals passthru.platforms.x86 ["i686-linux"] ++
+        optionals passthru.platforms.x64 ["x86_64-linux"];
+    };
   };
   sdks = mapAttrs buildSdk revisions;
 in sdks

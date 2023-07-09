@@ -1,34 +1,47 @@
-{ clangMultiStdenv, fetchFromGitHub, ambuild, metamod-source, symlinkJoin, sdks ? {} }: let
+{ clangStdenv, fetchFromGitHub, ambuild, metamod-source, symlinkJoin, lib, writeShellScriptBin, zlib, sdks ? {} }: let
   inherit (builtins) concatStringsSep attrNames attrValues;
-  sdkNames = attrNames sdks;
+  inherit (lib) optionals;
   combinedSdks = symlinkJoin {
     name = "hl2sdk-${concatStringsSep "-" (attrNames sdks)}";
     paths = attrValues sdks;
   };
-in clangMultiStdenv.mkDerivation rec {
+  ambuildArchs = {
+    "x86_64-linux" = "x86_64";
+    "i686-linux" = "x86";
+  };
+  ambuildArch = ambuildArchs.${clangStdenv.system};
+  sdkNames = concatStringsSep "," (attrNames sdks);
+  # ambuild doesn't allow configuring a target prefix for "ar"
+  arWrapper = writeShellScriptBin "ar" "exec -a $0 ${clangStdenv.cc.targetPrefix}ar $@";
+in clangStdenv.mkDerivation rec {
   pname = "sourcemod";
-  version = "1.10";
+  version = "1.11";
 
   NIX_CFLAGS_COMPILE = "-Wno-error=implicit-const-int-float-conversion -Wno-error=tautological-overlap-compare";
 
   src = fetchFromGitHub {
     owner = "alliedmodders";
     repo = pname;
-    rev = "39c2dc60e0c0d963cfbe39bee3a7cf953cc8055c";
-    sha256 = "sha256-SwrBuOAebmLq5bgjw5i8CFuEDTtvDqLYY/dk4holrzw=";
+    rev = "b09a675eb01c65dd95d7ac1a522fb62";
+    sha256 = "sha256-FQBYxBt2AoM7OQYhz+qZuLddT9tIfW7ZlRg1Zkd5qE0=";
     fetchSubmodules = true;
   };
 
   nativeBuildInputs = [
     ambuild
+  ] ++ optionals (clangStdenv.cc.targetPrefix != "") [arWrapper];
+
+  buildInputs = [
+    zlib
   ];
 
-  hardeningDisable = [ "all" ];
+#  hardeningDisable = [ "all" ];
 
   configurePhase = ''
     mkdir build
     cd build
-    python ../configure.py --sdks present --no-mysql --disable-auto-versioning --mms-path=${metamod-source.src} --hl2sdk-root=${combinedSdks}
+    python ../configure.py --targets ${ambuildArch} --enable-optimize --sdks=${sdkNames} \
+      --no-mysql --disable-auto-versioning --mms-path=${metamod-source.src} --hl2sdk-root=${combinedSdks}
   '';
 
   buildPhase = ''

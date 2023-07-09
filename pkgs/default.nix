@@ -1,6 +1,6 @@
 final: prev: {
   hl2sdk = (import ./hl2sdk.nix) {
-    inherit (final) fetchFromGitHub;
+    inherit (final) fetchFromGitHub lib;
     inherit (final.stdenvNoCC) mkDerivation;
   };
   ambuild = final.python3Packages.callPackage ./ambuild.nix {};

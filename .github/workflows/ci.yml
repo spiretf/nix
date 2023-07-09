@@ -23,7 +23,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: cachix/install-nix-action@v20
       - id: set-matrix
-        run: echo "matrix={\"sdk\":$(nix eval --json ".#sdks.x86_64-linux")}" | tee $GITHUB_OUTPUT
+        run: echo "matrix=$(nix eval --json ".#matrix")" | tee $GITHUB_OUTPUT
 
   sourcemod:
     runs-on: ubuntu-latest
@@ -39,7 +39,7 @@ jobs:
           name: ci
           instance: https://cache.icewind.me
           authToken: '${{ secrets.ATTIC_TOKEN }}'
-      - run: nix build .#sourcemods.${{ matrix.sdk }}
+      - run: nix build .#packages.${{ matrix.system }}.sourcemods.${{ matrix.sdk }}
 
   sourcepawn:
     runs-on: ubuntu-latest

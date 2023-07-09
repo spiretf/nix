@@ -8,17 +8,22 @@
     self,
     nixpkgs,
     utils,
-  }:
-    utils.lib.eachDefaultSystem (system: let
-      inherit (builtins) mapAttrs attrNames;
+  }: let
+      systems = with utils.lib.system; [x86_64-linux i686-linux];
+    in utils.lib.eachSystem systems (system: let
+      inherit (builtins) mapAttrs attrNames elem;
+      inherit (pkgs) lib;
+      inherit (lib.attrsets) filterAttrs;
       overlays = [(import ./pkgs)];
       pkgs = (import nixpkgs) {
         inherit system overlays;
+#        crossSystem = { config = "i686-unknown-linux-gnu"; };
       };
       testScript = pkgs.fetchurl {
         url = "https://raw.githubusercontent.com/spiretf/nocheats/master/plugin/nocheats.sp";
         sha256 = "sha256-Z3RJhuc9c8YQTo9gnLTBrqL4JpADZgDttrJVyE/MWdM=";
       };
+      platformSdks = filterAttrs (name: sdk: elem system sdk.meta.platforms) pkgs.hl2sdk;
     in rec {
       packages = rec {
         inherit (pkgs) ambuild sourcemod sourcepawn sourcemod-includes buildSourcePawnScript hl2sdk;
@@ -27,11 +32,17 @@
       };
 
       devShells.default = pkgs.mkShell {
-        nativeBuildInputs = with pkgs; [];
+        nativeBuildInputs = with pkgs; [clangStdenv];
       };
 
-      sdks = attrNames packages.hl2sdk;
+      sdks = attrNames platformSdks;
 
       overlays.default = import ./pkgs;
-    });
+    }) // {
+      matrix = let
+        inherit (nixpkgs.lib.lists) concatMap;
+        inherit (builtins) map;
+        systemSdks = concatMap (system: map (sdk: {inherit system sdk;}) self.sdks.${system}) systems;
+      in {include = systemSdks;};
+    };
 }
