@@ -9,4 +9,5 @@ final: prev: {
   sourcepawn = final.callPackage ./sourcepawn.nix {};
   sourcemod-includes = final.callPackage ./sourcemod-includes.nix {};
   buildSourcePawnScript = final.callPackage ./build-sourcepawn-script.nix {};
+  sourcemod-include-library = final.callPackage ./sourcemod-include-library.nix {};
 }

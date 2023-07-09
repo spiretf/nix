@@ -29,7 +29,7 @@
       platformSdks = filterAttrs (name: sdk: elem system sdk.meta.platforms) pkgs.hl2sdk;
     in rec {
       packages = rec {
-        inherit (pkgs) ambuild sourcemod sourcepawn sourcemod-includes buildSourcePawnScript hl2sdk;
+        inherit (pkgs) ambuild sourcemod sourcepawn sourcemod-includes buildSourcePawnScript hl2sdk sourcemod-include-library;
         sourcemods = mapAttrs (name: sdk: pkgs.sourcemod.override {sdks = {${name} = sdk;};}) hl2sdk;
         buildTestScript = buildSourcePawnScript {
           name = "test";

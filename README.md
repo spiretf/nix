@@ -10,6 +10,7 @@ The following is currently packaged:
 - `sourcepawn`
 - `metamod-source`
 - `sourcemod`
+- [`sourcemod-include-library`](https://github.com/JoinedSenses/SourceMod-IncludeLibrary)
 
 
 ## Sourcemod SDKs

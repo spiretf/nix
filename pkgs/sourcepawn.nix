@@ -46,11 +46,13 @@
 
     passthru = {
       buildInclude = let
-        fileNameForStorePath = path: substring 44 (stringLength path -44) path;
-      in files: runCommand "sourcepawn-include" {} ''
-        mkdir -p $out/include
-        ${concatStringsSep "\n" (map (file: "cp ${file} $out/include/${fileNameForStorePath file}") files)}
-      '';
+        fileNameForStorePath = path: substring 44 (stringLength path - 44) path;
+      in
+        files:
+          runCommand "sourcepawn-include" {} ''
+            mkdir -p $out/include
+            ${concatStringsSep "\n" (map (file: "cp ${file} $out/include/${fileNameForStorePath file}") files)}
+          '';
       includes = {
         sourcemod = sourcemod-includes;
       };
