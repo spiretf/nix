@@ -29,7 +29,7 @@ pkgs.sourcemod.override {sdks = {inherit (pkgs.hl2sdk) tf2;};};
 
 #### x86_64-linux
 
-`dota`
+`dota` and `csgo`
 
 ## Building sourcepawn script
 

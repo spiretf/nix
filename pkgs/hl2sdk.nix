@@ -30,7 +30,7 @@
   };
   # from https://github.com/alliedmodders/metamod-source/blob/master/sample_mm/AMBuildScript
   linuxX86Sdks = ["episode1" "css" "hl2dm" "dods" "sdk2013" "tf2" "l4d" "l4d2" "nucleardawn" "csgo" "doi" "bms"];
-  linuxX64Sdks = ["dota"];
+  linuxX64Sdks = ["dota" "csgo"];
   isX86 = name: elem name linuxX86Sdks;
   isX64 = name: elem name linuxX64Sdks;
   fetchRev = {rev, sha256}: fetchFromGitHub {

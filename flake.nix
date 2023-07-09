@@ -9,6 +9,8 @@
     nixpkgs,
     utils,
   }: let
+      inherit (nixpkgs.lib.lists) concatMap;
+      inherit (builtins) map;
       systems = with utils.lib.system; [x86_64-linux i686-linux];
     in utils.lib.eachSystem systems (system: let
       inherit (builtins) mapAttrs attrNames elem;
@@ -39,10 +41,8 @@
 
       overlays.default = import ./pkgs;
     }) // {
-      matrix = let
-        inherit (nixpkgs.lib.lists) concatMap;
-        inherit (builtins) map;
-        systemSdks = concatMap (system: map (sdk: {inherit system sdk;}) self.sdks.${system}) systems;
-      in {include = systemSdks;};
+      matrix = {
+        include = concatMap (system: map (sdk: {inherit system sdk;}) self.sdks.${system}) systems;
+      };
     };
 }
