@@ -44,5 +44,7 @@
       matrix = {
         include = concatMap (system: map (sdk: {inherit system sdk;}) self.sdks.${system}) systems;
       };
+      overlays.default = import ./pkgs;
+      inherit systems;
     };
 }
