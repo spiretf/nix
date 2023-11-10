@@ -7,6 +7,8 @@
   writeShellScriptBin,
   symlinkJoin,
   sourcemod-includes,
+  sourcemod-include-curl,
+  sourcemod-include-library,
   runCommand,
 }: let
   inherit (builtins) concatStringsSep substring stringLength;
@@ -54,7 +56,9 @@
             ${concatStringsSep "\n" (map (file: "cp ${file} $out/include/${fileNameForStorePath file}") files)}
           '';
       includes = {
+        library = sourcemod-include-library;
         sourcemod = sourcemod-includes;
+        curl = sourcemod-include-curl;
       };
       buildEnv = imports: let
         unwrapped = symlinkJoin {
