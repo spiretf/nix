@@ -16,7 +16,7 @@
     pname = "sourcepawn";
     version = "1.11";
 
-    NIX_CFLAGS_COMPILE = "-Wno-error=sign-compare -Wno-error=unused-but-set-variable -Wno-error=maybe-uninitialized";
+    NIX_CFLAGS_COMPILE = "-Wno-error=sign-compare -Wno-error=unused-but-set-variable -Wno-error=maybe-uninitialized -Wno-error=ignored-attributes";
 
     src = fetchFromGitHub {
       owner = "alliedmodders";
