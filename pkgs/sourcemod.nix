@@ -28,7 +28,7 @@ in
     pname = "sourcemod";
     version = "1.11";
 
-    NIX_CFLAGS_COMPILE = "-Wno-error=implicit-const-int-float-conversion -Wno-error=tautological-overlap-compare";
+    NIX_CFLAGS_COMPILE = "-Wno-error=implicit-const-int-float-conversion -Wno-error=tautological-overlap-compare -Wno-error=deprecated-non-prototype";
 
     src = fetchFromGitHub {
       owner = "alliedmodders";
