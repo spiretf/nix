@@ -9,6 +9,7 @@
   sourcemod-includes,
   sourcemod-include-curl,
   sourcemod-include-library,
+  sourcemod-include-steamworks,
   runCommand,
 }: let
   inherit (builtins) concatStringsSep substring stringLength;
@@ -59,6 +60,7 @@
         library = sourcemod-include-library;
         sourcemod = sourcemod-includes;
         curl = sourcemod-include-curl;
+        steamworks = sourcemod-include-steamworks;
       };
       buildEnv = imports: let
         unwrapped = symlinkJoin {

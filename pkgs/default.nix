@@ -11,4 +11,5 @@ final: prev: {
   buildSourcePawnScript = final.callPackage ./build-sourcepawn-script.nix {};
   sourcemod-include-library = final.callPackage ./includes/sourcemod-include-library.nix {};
   sourcemod-include-curl = final.callPackage ./includes/curl.nix {};
+  sourcemod-include-steamworks = final.callPackage ./includes/steamworks.nix {};
 }
