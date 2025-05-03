@@ -9,8 +9,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "alliedmodders";
     repo = "sourcemod";
-    rev = "39c2dc60e0c0d963cfbe39bee3a7cf953cc8055c";
-    sha256 = "sha256-9maE7NKSpkMfK4NgO0NAItpj2ONhGhsOOp81rTpKyFE=";
+    rev = "b0cf46521b2be5f1497644275caee9b7c330ed6c";
+    hash = "sha256-4cB1Ey5eWoCYXmMrT/Irqk+w+1q0RwBQ23YZ4FKI/gM=";
   };
 
   doConfigure = false;
