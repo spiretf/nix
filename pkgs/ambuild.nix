@@ -10,8 +10,8 @@ buildPythonPackage rec {
   src = fetchFromGitHub {
     owner = "alliedmodders";
     repo = pname;
-    rev = "9392da7c7e0a148bf8e0089b88d372a6eb62c65c";
-    sha256 = "sha256-4Ar6EWhgUiO5ZHna5JqwRHlYeh54WjZi0xqv/u3tqOU=";
+    rev = "25a23ac92307eb1e181fd3e7d9385412d4034532";
+    hash = "sha256-edKJM+dwba2xih0bAOc/MT0BIUwoP+5cTAdtn0cfZUo=";
   };
 
   doCheck = false;
