@@ -15,15 +15,15 @@
   inherit (builtins) concatStringsSep substring stringLength;
   self = stdenv.mkDerivation rec {
     pname = "sourcepawn";
-    version = "1.11";
+    version = "1.12";
 
-    NIX_CFLAGS_COMPILE = "-Wno-error=sign-compare -Wno-error=unused-but-set-variable -Wno-error=maybe-uninitialized -Wno-error=ignored-attributes";
+    NIX_CFLAGS_COMPILE = "-Wno-error=sign-compare -Wno-error=unused-but-set-variable -Wno-error=maybe-uninitialized -Wno-error=ignored-attributes -Wno-error=unused-variable";
 
     src = fetchFromGitHub {
       owner = "alliedmodders";
       repo = pname;
-      rev = "9cf9f31d4560fe7e76c6be75a2245088d03a3937";
-      hash = "sha256-lqd6aN5FLCJo8+B+tabABqkkgIFH+o0/0WpnYLse/o4=";
+      rev = "11b22edb634b9764d19fd28699e03289cfd18520";
+      hash = "sha256-O9V6D0tL9EBX1r41AgPNliNIU2SPfwZVU89Pgsuw/Cw=";
       fetchSubmodules = true;
     };
 
@@ -77,6 +77,7 @@
           paths = [unwrapped wrapped];
         };
     };
+    meta.mainProgram = "spcomp";
   };
 in
   self
