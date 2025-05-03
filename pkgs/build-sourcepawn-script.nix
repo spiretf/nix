@@ -11,9 +11,7 @@
   ...
 } @ args: let
   inherit (lib) optionals;
-  inherit (builtins) removeAttrs;
   allIncludes = includes ++ optionals defaultIncludes [sourcepawn.includes.sourcemod];
-  forwardAttrs = removeAttrs args ["defaultIncludes" "includes" "entrypoint"];
   spEnv = sourcepawn.buildEnv allIncludes;
   outPathRelative =
     if outPath == ""
@@ -24,7 +22,7 @@
     then ""
     else "mkdir -p $out";
 in
-  stdenv.mkDerivation (rec {
+  stdenv.mkDerivation ({
       nativeBuildInputs = [spEnv which];
       dontUnpack = true;
       buildPhase = ''
