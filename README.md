@@ -1,3 +1,5 @@
+# Moved to https://codeberg.org/spire/nix
+
 # Spire nix packages
 
 A set of tf2 related nix packages
